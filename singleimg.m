@@ -1,13 +1,7 @@
 close all; 
 clear; 
 clc; 
-PathRoot='C:\Users\hasee\Desktop\03Polyu_Pamprin\Polyu_Pamprint_600';
-list=dir(PathRoot);
-fileNum=size(list); 
-for k=3:fileNum%k=36 
-	disp(list(k).name)  % 这就是文件名，如果有子文件夹，则也包含在里面。
-%f1=imread('1479305870650c.jpg');
-f1=imread(list(k).name);
+f1=imread('PolyU_98_5.bmp');
     %figure(1);
       %subplot(221),imshow(f1);title('原始图像');
     f=double(f1);
@@ -86,7 +80,7 @@ for kk=1:length(BB)
     end
     
 end
-%figure(6);imshow(im2);title('中心线图')%绘制中心线
+figure(6);imshow(im2);title('中心线图')%绘制中心线
 im3=im1&im2;
 im3=double(im3);
 figure(7);imshow(im3);%绘制重合点图
@@ -186,7 +180,7 @@ plot([xROIrb,xROIlb],[yROIrb,yROIlb],'Color','b','LineWidth',2);
 hold off;  
 
 %%%旋转后
-%%
+%%重新找
 %%
 f1=imrotate(f1,at,'bilinear','crop');
 [m,n]=size(f1);
@@ -197,12 +191,12 @@ f1=imrotate(f1,at,'bilinear','crop');
 x2=sqrt((tag-n/2)*(tag-n/2)+(flag-m/2)*(flag-m/2))*cosd(atand((m/2-flag)/(tag-n/2))+at); 
 y2=sqrt((tag-n/2)*(tag-n/2)+(flag-m/2)*(flag-m/2))*sind(atand((m/2-flag)/(tag-n/2))+at); 
 tag=n/2-x2;
-%flag=m/2+y2;
-flag=0;
+flag=m/2+y2;
+
 %x2=sqrt((tag1-n/2)*(tag1-n/2)+(flag1-m/2)*(flag1-m/2))*cosd(atand((m/2-flag1)/(tag1-n/2))-at); 
 %y2=sqrt((tag1-n/2)*(tag1-n/2)+(flag1-m/2)*(flag1-m/2))*sind(atand((m/2-flag1)/(tag1-n/2))-at); 
 tag1=tag;
-flag1=m;
+flag1=flag1;
 
 
 figure(20),imshow(f1);
@@ -234,17 +228,33 @@ plot([xROIlt,xROIlb],[yROIlt,yROIlb],'Color','b','LineWidth',2);
 plot([xROIrt,xROIrb],[yROIrt,yROIrb],'Color','b','LineWidth',2);
 plot([xROIrt,xROIlt],[yROIrt,yROIlt],'Color','b','LineWidth',2);
 plot([xROIrb,xROIlb],[yROIrb,yROIlb],'Color','b','LineWidth',2);
-saveas(gcf,['C:\Users\hasee\Desktop\03Polyu_Pamprin\preprocessresult\',list(k).name,'.jpg']);
 hold off; 
 %%
 %截取
 RGB=f1;
 RGB1=imcrop(RGB,[xROIlt,yROIlt,128,128]);
+figure(22),subplot(231);
+imshow(RGB1);title('ROI');
+I=RGB1;
+[G1,gabout1]=gaborfilter(I,5,5,5,0);
+[G2,gabout2]=gaborfilter(I,5,5,5,90);
+[G3,gabout3]=gaborfilter(I,5,5,10,0);
+[G4,gabout4]=gaborfilter(I,5,5,10,90);
+J1=fft2(gabout1);
+J2=fft2(gabout2);
+J3=fft2(gabout3);
+J4=fft2(gabout4);
+A1=double(J1);
+A2=double(J2);
+A3=double(J3);
+A4=double(J4);
+[m,n]=size(A1);
 figure(22),
-imshow(RGB1);
-% saveas(RGB1,['C:\Users\hasee\Desktop\graduation project\preprocessresult\',list(k).name,'.jpg']);
-saveas(gcf,['C:\Users\hasee\Desktop\03Polyu_Pamprin\ROIresult\',list(k).name]);
-
-end
-
-
+subplot(232);
+imshow(uint8(gabout1));title('sigma=5,theta=0');
+subplot(233);
+imshow(uint8(gabout2));title('sigma=5,theta=90');
+subplot(234);
+imshow(uint8(gabout3));title('sigma=10,theta=0');
+subplot(235);
+imshow(uint8(gabout4));title('sigma=10,theta=90');

@@ -1,13 +1,11 @@
-close all; 
-clear; 
-clc; 
+function [picgaborcode]=singletest(picnumber)
 PathRoot='C:\Users\hasee\Desktop\03Polyu_Pamprin\Polyu_Pamprint_600';
 list=dir(PathRoot);
 fileNum=size(list); 
-for k=3:fileNum%k=36 
+for k=2+picnumber:2+picnumber%k=36 
 	disp(list(k).name)  % 这就是文件名，如果有子文件夹，则也包含在里面。
 %f1=imread('1479305870650c.jpg');
-f1=imread(list(k).name);
+f1=imread(strcat('C:\Users\hasee\Desktop\03Polyu_Pamprin\Polyu_Pamprint_600\',list(k).name));
     %figure(1);
       %subplot(221),imshow(f1);title('原始图像');
     f=double(f1);
@@ -244,6 +242,37 @@ figure(22),
 imshow(RGB1);
 % saveas(RGB1,['C:\Users\hasee\Desktop\graduation project\preprocessresult\',list(k).name,'.jpg']);
 saveas(gcf,['C:\Users\hasee\Desktop\03Polyu_Pamprin\ROIresult\',list(k).name]);
+%ROI特征提取
+figure(111),
+subplot(231);imshow(uint8(RGB1));title('ROI');
+Sx=5;
+Sy=5;
+sigma=[5,10];
+theta=[0,pi/2];
+I=RGB1;
+figure(111),
+subplot(236);imshow(uint8(I));title('rgb2gray(f1)');
+[G1,gabout1]=gaborfilter(I,Sx,Sy,sigma(1),theta(1));
+[G2,gabout2]=gaborfilter(I,Sx,Sy,sigma(2),theta(1));
+[G3,gabout3]=gaborfilter(I,Sx,Sy,sigma(1),theta(2));
+[G4,gabout4]=gaborfilter(I,Sx,Sy,sigma(2),theta(2));
+figure(111),
+subplot(232);imshow(uint8(gabout1));title('gabout1');
+subplot(233);imshow(uint8(gabout2));title('gabout2');
+subplot(234);imshow(uint8(gabout3));title('gabout3');
+subplot(235);imshow(uint8(gabout4));title('gabout4')
+gaboutav
+%二值化
+[bgabout1]=bigabout(gabout1);
+[bgabout2]=bigabout(gabout2);
+[bgabout3]=bigabout(gabout3);
+[bgabout4]=bigabout(gabout4);
+figure(112),
+subplot(221);imshow(uint8(bgabout1));title('bgabout1');
+subplot(222);imshow(uint8(bgabout2));title('bgabout2');
+subplot(223);imshow(uint8(bgabout3));title('bgabout3');
+subplot(224);imshow(uint8(bgabout4));title('bgabout4');
+picgaborcode=[reshape(bgabout1,1,16*16),reshape(bgabout2,1,16*16),reshape(bgabout3,1,16*16),reshape(bgabout4,1,16*16)];
 
 end
 

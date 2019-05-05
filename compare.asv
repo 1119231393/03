@@ -1,0 +1,3 @@
+picgaborcode1=singletest(1);
+picgaborcode2=singletest(2);
+for i=1:1024
