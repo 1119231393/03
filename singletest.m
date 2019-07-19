@@ -1,5 +1,5 @@
 function [picgaborcode]=singletest(picnumber)
-PathRoot='C:\Users\hasee\Desktop\03Polyu_Pamprin\Polyu_Pamprint_600';
+PathRoot='C:\Users\hasee\Desktop\03Polyu_Pamprin\Polyu_Pamprint_600\';
 list=dir(PathRoot);
 fileNum=size(list); 
 for k=2+picnumber:2+picnumber%k=36 
@@ -164,7 +164,7 @@ xfaend=300;%自定义法线长度，通过指定结尾点x值
 yfaend=kfa*(xfaend-pmid(2));
 plot([pmid(2),xfaend],[pmid(1),yfaend+pmid(1)],'Color','g','LineWidth',2);
 plot([p1(2),p2(2)],[p1(1),p2(1)],'Color','r','LineWidth',2);
-xawaypmid=18;%调节ROI区域距离
+xawaypmid=20;%调节ROI区域距离
 pROIacross1=[pmid(1)+xawaypmid*kfa,pmid(2)+xawaypmid];
 at=atand(kfa);
 sat=sind(at);
@@ -183,27 +183,17 @@ plot([xROIrt,xROIrb],[yROIrt,yROIrb],'Color','b','LineWidth',2);
 plot([xROIrt,xROIlt],[yROIrt,yROIlt],'Color','b','LineWidth',2);
 plot([xROIrb,xROIlb],[yROIrb,yROIlb],'Color','b','LineWidth',2);
 hold off;  
-
 %%%旋转后
 %%
 %%
 f1=imrotate(f1,at,'bilinear','crop');
 [m,n]=size(f1);
-% x2=sqrt((xB-n/2)*(xB-n/2)+(yB-m/2)*(yB-m/2))*cosd(atand(abs((yB-m/2)/(xB-n/2)))-30); 
-% y2=sqrt((xB-n/2)*(xB-n/2)+(yB-m/2)*(yB-m/2))*sind(atand(abs((yB-m/2)/(xB-n/2)))-30); 
-% xB2=n/2+x2;
-% yB2=m/2-y2;
 x2=sqrt((tag-n/2)*(tag-n/2)+(flag-m/2)*(flag-m/2))*cosd(atand((m/2-flag)/(tag-n/2))+at); 
 y2=sqrt((tag-n/2)*(tag-n/2)+(flag-m/2)*(flag-m/2))*sind(atand((m/2-flag)/(tag-n/2))+at); 
 tag=n/2-x2;
-%flag=m/2+y2;
 flag=0;
-%x2=sqrt((tag1-n/2)*(tag1-n/2)+(flag1-m/2)*(flag1-m/2))*cosd(atand((m/2-flag1)/(tag1-n/2))-at); 
-%y2=sqrt((tag1-n/2)*(tag1-n/2)+(flag1-m/2)*(flag1-m/2))*sind(atand((m/2-flag1)/(tag1-n/2))-at); 
 tag1=tag;
 flag1=m;
-
-
 figure(20),imshow(f1);
 hold on
 p1 = [flag,tag];
@@ -215,7 +205,7 @@ xfaend=300;%自定义法线长度，通过指定结尾点x值
 yfaend=kfa*(xfaend-pmid(2));
 plot([pmid(2),xfaend],[pmid(1),yfaend+pmid(1)],'Color','g','LineWidth',2);
 plot([p1(2),p2(2)],[p1(1),p2(1)],'Color','r','LineWidth',2);
-xawaypmid=18;%调节ROI区域距离
+xawaypmid=20;%调节ROI区域距离
 pROIacross1=[pmid(1)+xawaypmid*kfa,pmid(2)+xawaypmid];
 at=atand(kfa);
 sat=sind(at);
@@ -233,57 +223,33 @@ plot([xROIlt,xROIlb],[yROIlt,yROIlb],'Color','b','LineWidth',2);
 plot([xROIrt,xROIrb],[yROIrt,yROIrb],'Color','b','LineWidth',2);
 plot([xROIrt,xROIlt],[yROIrt,yROIlt],'Color','b','LineWidth',2);
 plot([xROIrb,xROIlb],[yROIrb,yROIlb],'Color','b','LineWidth',2);
-saveas(gcf,['C:\Users\hasee\Desktop\03Polyu_Pamprin\preprocessresult\',list(k).name,'.jpg']);
+saveas(gcf,['C:\Users\hasee\Desktop\03Polyu_Pamprin\preprocessresult\',list(k).name]);
 hold off; 
 %%
 %截取
 RGB=f1;
-RGB1=imcrop(RGB,[xROIlt,yROIlt,128,128]);
+RGB1=imcrop(RGB,[xROIlt,yROIlt,127,127]);
 figure(22),
 imshow(RGB1);
-% saveas(RGB1,['C:\Users\hasee\Desktop\graduation project\preprocessresult\',list(k).name,'.jpg']);
 saveas(gcf,['C:\Users\hasee\Desktop\03Polyu_Pamprin\ROIresult\',list(k).name]);
 %ROI特征提取
 figure(111),
 subplot(231);imshow(uint8(RGB1));title('ROI');
 Sx=5;
 Sy=5;
-sigma=[5,10];
-theta=[0,pi/2];
+sigma=5.6179;
+theta=pi/4;
+u=0.0916;
 I=RGB1;
+[complexGabout,realGabout,imagGabout]=gaborfilter(I,Sx,Sy,theta,u,sigma);
 figure(111),
-subplot(236);imshow(uint8(I));title('rgb2gray(f1)');
-[G1,gabout1]=gaborfilter(I,Sx,Sy,sigma(1),theta(1));
-[G2,gabout2]=gaborfilter(I,Sx,Sy,sigma(2),theta(1));
-[G3,gabout3]=gaborfilter(I,Sx,Sy,sigma(1),theta(2));
-[G4,gabout4]=gaborfilter(I,Sx,Sy,sigma(2),theta(2));
-figure(111),
-subplot(232);imshow(uint8(gabout1));title('gabout1');
-subplot(233);imshow(uint8(gabout2));title('gabout2');
-subplot(234);imshow(uint8(gabout3));title('gabout3');
-subplot(235);imshow(uint8(gabout4));title('gabout4')
-[m,n]=size(gabout1);
-gaboutavg=zeros(m,n);
-for i=1:m
-    for j=1:n
-        gaboutavg(i,j)=(gabout1(i,j)+gabout2(i,j)+gabout3(i,j)+gabout4(i,j))/4;
-    end
-end
-    [gaboutavg]=bigabout(gaboutavg);
-    picgaborcode=reshape(gaboutavg,1,m*n) ;
-    
-% %二值化
-% [bgabout1]=bigabout(gabout1);
-% [bgabout2]=bigabout(gabout2);
-% [bgabout3]=bigabout(gabout3);
-% [bgabout4]=bigabout(gabout4);
-% figure(112),
-% subplot(221);imshow(uint8(bgabout1));title('bgabout1');
-% subplot(222);imshow(uint8(bgabout2));title('bgabout2');
-% subplot(223);imshow(uint8(bgabout3));title('bgabout3');
-% subplot(224);imshow(uint8(bgabout4));title('bgabout4');
-%picgaborcode=[reshape(bgabout1,1,16*16),reshape(bgabout2,1,16*16),reshape(bgabout3,1,16*16),reshape(bgabout4,1,16*16)];
-
+subplot(233);imshow(im2bw(realGabout));title('realGabout');
+subplot(234);imshow(im2bw(imagGabout));title('imagGabout');
+[biRealGabout]=bigabout(realGabout);
+subplot(236);imshow(im2bw(biRealGabout));title('biRealGabout');
+[m,n]=size(biRealGabout);
+% picgaborcode=reshape(biRealGabout,1,m*n) ;
+picgaborcode=biRealGabout;
 end
 
 
