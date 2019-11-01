@@ -205,7 +205,7 @@ xfaend=300;%自定义法线长度，通过指定结尾点x值
 yfaend=kfa*(xfaend-pmid(2));
 plot([pmid(2),xfaend],[pmid(1),yfaend+pmid(1)],'Color','g','LineWidth',2);
 plot([p1(2),p2(2)],[p1(1),p2(1)],'Color','r','LineWidth',2);
-xawaypmid=20;%调节ROI区域距离
+xawaypmid=50;%调节ROI区域距离
 pROIacross1=[pmid(1)+xawaypmid*kfa,pmid(2)+xawaypmid];
 at=atand(kfa);
 sat=sind(at);
@@ -241,13 +241,18 @@ sigma=5.6179;
 theta=pi/4;
 u=0.0916;
 I=RGB1;
+%用师兄的ROI结果测试start
+PathRootp='C:\Users\hasee\Desktop\03Polyu_Pamprin\p\';
+listp=dir(PathRootp);
+I=imread(strcat(PathRootp,listp(k).name));
+%用师兄的ROI结果测试end
 [complexGabout,realGabout,imagGabout]=gaborfilter(I,Sx,Sy,theta,u,sigma);
 figure(111),
 subplot(233);imshow(im2bw(realGabout));title('realGabout');
 subplot(234);imshow(im2bw(imagGabout));title('imagGabout');
 [biRealGabout]=bigabout(realGabout);
 subplot(236);imshow(im2bw(biRealGabout));title('biRealGabout');
-[m,n]=size(biRealGabout);
+%[m,n]=size(biRealGabout);
 % picgaborcode=reshape(biRealGabout,1,m*n) ;
 picgaborcode=biRealGabout;
 end
